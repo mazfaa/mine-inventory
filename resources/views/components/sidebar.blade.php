@@ -25,8 +25,9 @@
       </li>
 
       <x-sidebar-link :href="route('item.index')" :active="request()->routeIs('item.*')" :icon="'box'">Item</x-sidebar-link>
-      <x-sidebar-link :href="'/'" :active="request()->is('/category')" :icon="'download'">Item In</x-sidebar-link>
-      <x-sidebar-link :href="'/'" :active="request()->is('/category')" :icon="'upload'">Item Out</x-sidebar-link>
+      <x-sidebar-link :href="route('item.index')" :active="request()->routeIs('transaction.*')" :icon="'repeat'">Transaction</x-sidebar-link>
+      {{-- <x-sidebar-link :href="'/'" :active="request()->is('/category')" :icon="'download'">Item In</x-sidebar-link>
+      <x-sidebar-link :href="'/'" :active="request()->is('/category')" :icon="'upload'">Item Out</x-sidebar-link> --}}
 
       <li class="sidebar-header">
         User Management

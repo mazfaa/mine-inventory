@@ -32,6 +32,10 @@
   <!-- CKEditor -->
   <link rel="stylesheet" href="{{ asset('ckeditor/ckeditor5.css') }}">
   <script src="{{ asset('ckeditor/ckeditor5.umd.js') }}"></script>
+
+  <link rel="stylesheet" href="{{ asset('datatables/fixedColumns.dataTables.min.css') }}">
+<script src="{{ asset('datatables/dataTables.fixedColumns.min.js') }}"></script>
+
 </head>
 
 <body>

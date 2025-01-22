@@ -72,6 +72,10 @@
         $('#items-table').DataTable({
            order: [[9, 'desc']],
           scrollX: true,
+          scrollCollapse: true,
+          fixedColumns: {
+            rightColumns: 1, // Tetapkan jumlah kolom tetap di sisi kanan
+          },
           processing: true,
           serverSide: true,
           ajax: '{{ route('fetch-items') }}',
