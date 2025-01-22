@@ -9,6 +9,12 @@ trait HasDataTablesActions
   public function generateDataTable($query, $routes, $additionalColumns = [])
   {
     return DataTables::of($query)
+      ->addColumn('category', function ($row) {
+        return $row->category->name ?? 'No Category';
+      })
+      ->editColumn('unit_price', function ($row) {
+        return 'Rp ' . number_format($row->unit_price, 0, ',', '.');
+      })
       ->addColumn('action', function ($row) use ($routes) {
         $viewRoute = $routes['view'] ?? null;
         $editRoute = $routes['edit'] ?? null;

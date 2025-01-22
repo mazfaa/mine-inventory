@@ -20,7 +20,7 @@ return new class extends Migration {
       $table->enum('barcode_type', ['ISBN', 'UPC', 'GTIN'])->nullable();
       $table->integer('quantity');
       $table->integer('min_stock');
-      $table->decimal('unit_price');
+      $table->integer('unit_price');
       $table->timestamps();
       $table->softDeletes();
     });

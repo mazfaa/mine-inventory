@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StorageLocationController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -17,3 +18,6 @@ Route::resource('supplier', SupplierController::class);
 
 Route::get('/fetch-storage-locations', [StorageLocationController::class, 'fetch_storage_locations'])->name('fetch-storage-locations');
 Route::resource('storage-location', StorageLocationController::class);
+
+Route::get('/fetch-items', [ItemController::class, 'fetch_items'])->name('fetch-items');
+Route::resource('item', ItemController::class);

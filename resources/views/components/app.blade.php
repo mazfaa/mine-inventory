@@ -266,7 +266,21 @@
         .catch(error => {
           console.error(error);
         });
-          console.log(CKEDITOR)
+
+    function formatPrice(value) {
+      if (!value) return '';
+      return new Intl.NumberFormat('id-ID').format(value);
+    }
+
+    function bindPriceFormatter(selector) {
+      $(document).on('input', selector, function () {
+        let value = $(this).val().replace(/\D/g, '');;
+
+        $(this).val(formatPrice(value));
+      });
+    }
+
+    bindPriceFormatter('.price');
   </script>
 
   {{ $scripts ?? '' }}
