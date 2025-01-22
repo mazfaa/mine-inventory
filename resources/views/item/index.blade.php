@@ -6,6 +6,40 @@
   </div>
 
   <div class="row">
+    <div class="col-md-3">
+      <x-stats-card :title="'Total Item'" :stats="$total_item">
+        <x-slot name="icon">
+          <i class="align-middle" data-feather="box"></i>
+        </x-slot>
+      </x-stats-card>
+    </div>
+
+    <div class="col-md-3">
+      <x-stats-card :title="'Total Stock'" :stats="$total_stock">
+        <x-slot name="icon">
+          <i class="align-middle" data-feather="package"></i>
+        </x-slot>
+      </x-stats-card>
+    </div>
+
+    <div class="col-md-3">
+      <x-stats-card :title="'Total Price'" :stats="number_format($total_price, 0, ',', '.')">
+        <x-slot name="icon">
+          <i class="align-middle" data-feather="dollar-sign"></i>
+        </x-slot>
+      </x-stats-card>
+    </div>
+
+    <div class="col-md-3">
+      <x-stats-card :title="'Average Price'" :stats="number_format($average_price, 0, ',', '.')">
+        <x-slot name="icon">
+          <i class="align-middle" data-feather="pie-chart"></i>
+        </x-slot>
+      </x-stats-card>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-xl-12 col-md-12 col-sm-12">
       <div class="card">
         <div class="card-body">

@@ -11,10 +11,6 @@
         </div>
       </div>
     </div>
-    <h1 class="mt-1 mb-3">{{ $stats }}</h1>
-    <div class="mb-0">
-      <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> {{ $percentage }}% </span>
-      <span class="text-muted">Since last week</span>
-    </div>
+    <h4 class="">{{ $stats }}</h4>
   </div>
 </div>

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Traits\HasDataTablesActions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ItemController extends Controller
@@ -31,7 +32,12 @@ class ItemController extends Controller
    */
   public function index()
   {
-    return view('item.index');
+    return view('item.index', [
+      'total_item' => Item::count(),
+      'total_stock' => Item::sum('quantity'),
+      'total_price' => Item::sum(DB::raw('quantity * unit_price')),
+      'average_price' => Item::avg('unit_price'),
+    ]);
   }
 
   /**
