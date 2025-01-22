@@ -13,11 +13,16 @@ return new class extends Migration {
     Schema::create('items', function (Blueprint $table) {
       $table->id();
       $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+      $table->string('sku')->unique();
       $table->string('name');
-      $table->text('description');
-      $table->decimal('unit_price');
+      $table->text('description')->nullable();
+      $table->string('barcode')->nullable();
+      $table->enum('barcode_type', ['ISBN', 'UPC', 'GTIN'])->nullable();
+      $table->integer('quantity');
       $table->integer('min_stock');
+      $table->decimal('unit_price');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

@@ -1,0 +1,35 @@
+3. Library dan Framework Tambahan
+Untuk fitur tertentu, gunakan tools berikut:
+
+a. Interaktivitas dan Real-Time Features
+Laravel Echo + Pusher/Socket.IO:
+
+Untuk real-time notifications atau live stock updates.
+Contoh: Pemberitahuan stok rendah secara langsung.
+FullCalendar.js:
+
+Untuk menampilkan jadwal restock barang atau pelaporan transaksi pada kalender.
+b. Visualisasi Data
+Chart.js atau ApexCharts:
+
+Untuk membuat grafik dan diagram interaktif pada dashboard.
+Contoh: Visualisasi tren stok atau transaksi harian/mingguan.
+DataTables.js:
+
+Untuk tabel interaktif dengan fitur pencarian, sorting, dan pagination.
+c. Drag-and-Drop
+Sortable.js:
+
+Untuk mengatur ulang lokasi penyimpanan atau kategori dengan drag-and-drop.
+Dropzone.js:
+
+Untuk fitur unggah file (contoh: gambar barang atau dokumen pendukung).
+4. Database dan Integrasi API
+Database:
+
+MySQL/MariaDB: Untuk skalabilitas data besar.
+Redis: Untuk caching atau optimasi proses backend seperti pencarian stok.
+Integrasi API:
+
+Barcode Generator/Reader: Gunakan library seperti Dynamsoft Barcode Reader untuk fitur scanning.
+Payment Gateway API: Jika aplikasi mendukung pembayaran langsung, gunakan integrasi seperti Midtrans atau Stripe.

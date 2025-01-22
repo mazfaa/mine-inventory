@@ -1,0 +1,20 @@
+1. Buka Fitur Find and Replace
+Tekan Ctrl + H (Windows/Linux) atau Cmd + H (Mac) untuk membuka panel Find and Replace.
+2. Aktifkan Mode Regular Expression
+Klik ikon .* di sisi kanan kotak pencarian untuk mengaktifkan mode Regular Expression.
+3. Gunakan Pola Pencarian
+Masukkan pola berikut ke dalam kotak Find:
+
+regex
+Copy
+Edit
+(href|src)="([^"]+)"
+4. Masukkan Format Penggantian
+Masukkan pola berikut ke dalam kotak Replace:
+
+regex
+Copy
+Edit
+$1="{{ asset('$2') }}"
+5. Ganti Semua
+Klik Replace All (atau Alt + Enter) untuk mengganti semua kecocokan dalam file.

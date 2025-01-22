@@ -1,0 +1,40 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.page-item .page-link {
+    border: 1px solid #dee2e6;
+    color: #0d6efd;
+}
+
+.page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+li {
+    list-style: none;
+}
+
+textarea {
+    resize: none;
+}
+
+.ck {
+    height: 150px;
+}
+
+th,
+td {
+    text-align: left !important;
+}
