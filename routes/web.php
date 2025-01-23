@@ -21,3 +21,4 @@ Route::resource('storage-location', StorageLocationController::class);
 
 Route::get('/fetch-items', [ItemController::class, 'fetch_items'])->name('fetch-items');
 Route::resource('item', ItemController::class);
+Route::post('/items/bulk-delete', [ItemController::class, 'bulk_delete'])->name('bulk-delete-items');

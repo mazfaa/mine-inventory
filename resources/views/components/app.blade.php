@@ -36,6 +36,10 @@
   <link rel="stylesheet" href="{{ asset('datatables/fixedColumns.dataTables.min.css') }}">
 <script src="{{ asset('datatables/dataTables.fixedColumns.min.js') }}"></script>
 
+<!-- Swal -->
+<link rel="stylesheet" href="{{ asset('swal/sweetalert2.min.css') }}">
+<script src="{{ asset('swal/sweetalert2.js') }}"></script>
+
 </head>
 
 <body>
@@ -256,6 +260,8 @@
 
   <script src="{{ asset('js/app.js') }}"></script>
 
+  {{ $scripts ?? '' }}
+
   <script>
     const { ClassicEditor, Essentials, Bold, Italic, Font, Paragraph } = window.CKEDITOR;
       ClassicEditor
@@ -286,8 +292,6 @@
 
     bindPriceFormatter('.price');
   </script>
-
-  {{ $scripts ?? '' }}
 </body>
 
 </html>

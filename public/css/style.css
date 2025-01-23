@@ -38,3 +38,14 @@ th,
 td {
     text-align: left !important;
 }
+
+.clickable-row {
+    cursor: pointer;
+}
+.clickable-row:hover {
+    background-color: #f8f9fa !important;
+}
+
+#bulk-action-container {
+    transition: all 0.3s ease;
+}

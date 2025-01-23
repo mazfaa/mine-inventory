@@ -113,4 +113,13 @@ class ItemController extends Controller
 
     return redirect()->route('item.index');
   }
+
+  public function bulk_delete(Request $request)
+  {
+    $ids = $request->ids;
+    Item::whereIn('id', $ids)->delete();
+
+    return response()->json(['message' => 'Selected items deleted successfully!']);
+  }
+
 }
