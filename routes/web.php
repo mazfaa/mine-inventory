@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StorageLocationController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -22,3 +23,7 @@ Route::resource('storage-location', StorageLocationController::class);
 Route::get('/fetch-items', [ItemController::class, 'fetch_items'])->name('fetch-items');
 Route::resource('item', ItemController::class);
 Route::post('/items/bulk-delete', [ItemController::class, 'bulk_delete'])->name('bulk-delete-items');
+
+Route::get('/fetch-transactions', [TransactionController::class, 'fetch_transactions'])->name('fetch-transactions');
+Route::resource('transaction', TransactionController::class);
+Route::post('/transactions/bulk-delete', [TransactionController::class, 'bulk_delete'])->name('bulk-delete-transactions');

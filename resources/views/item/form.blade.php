@@ -26,11 +26,19 @@
 
               <div class="w-50">
                 <x-form-label :for="'category_id'">Category *</x-form-label>
-                <select name="category_id" id="category_id" class="form-select @error('category_id') is-invalid @enderror">
-                  @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id || $item->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                  @endforeach
-                </select>
+
+                <div class="d-flex">
+                  <select name="category_id" id="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                    @foreach ($categories as $category)
+                      <option value="{{ $category->id }}" {{ old('category_id') == $category->id || $item->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                  </select>
+
+                  <a href="{{ route('category.create') }}" class="btn border border-secondary-subtle">
+                    <i class="align-middle" data-feather="plus"></i>
+                  </a>
+                </div>
+                
                 @error('category_id')
                   <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

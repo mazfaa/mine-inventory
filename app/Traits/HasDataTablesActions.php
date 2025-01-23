@@ -9,6 +9,18 @@ trait HasDataTablesActions
   public function generateDataTable($query, $routes, $additionalColumns = [])
   {
     return DataTables::of($query)
+      ->addColumn('transaction_id', function ($row) {
+        return $row->transaction->name ?? 'No Transaction ID';
+      })
+      ->addColumn('item', function ($row) {
+        return $row->item->name ?? 'No Item';
+      })
+      ->addColumn('supplier', function ($row) {
+        return $row->supplier->name ?? 'No Supplier';
+      })
+      ->addColumn('storage_location', function ($row) {
+        return $row->storage_location->name ?? 'No Storage_location';
+      })
       ->addColumn('category', function ($row) {
         return $row->category->name ?? 'No Category';
       })

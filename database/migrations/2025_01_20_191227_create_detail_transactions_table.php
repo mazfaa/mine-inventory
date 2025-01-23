@@ -16,6 +16,7 @@ return new class extends Migration {
       $table->foreignId('item_id')->constrained()->cascadeOnDelete();
       $table->foreignId('supplier_id')->constrained()->cascadeOnDelete();
       $table->foreignId('storage_location_id')->constrained()->cascadeOnDelete();
+      $table->integer('quantity');
       $table->timestamps();
     });
   }

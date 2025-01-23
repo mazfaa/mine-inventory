@@ -1,39 +1,31 @@
 <x-app>
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 items-center">Items</h1>
+    <h1 class="h3 transactions-center">Transactions</h1>
 
-    <a href="{{ route('item.create') }}" class="btn btn-sm btn-dark" id="btnAddItem">New Item</a>
+    <a href="{{ route('transaction.create') }}" class="btn btn-sm btn-dark" id="btnAddTransaction">New Transaction</a>
   </div>
 
   <div class="row">
-    <div class="col-md-3">
-      <x-stats-card :title="'Total Item'" :stats="$total_item">
+    <div class="col-md-4">
+      <x-stats-card :title="'Total Transaction'" :stats="$total_transaction">
         <x-slot name="icon">
-          <i class="align-middle" data-feather="box"></i>
+          <i class="align-middle" data-feather="plus-circle"></i>
         </x-slot>
       </x-stats-card>
     </div>
 
-    <div class="col-md-3">
-      <x-stats-card :title="'Total Stock'" :stats="$total_stock">
+    <div class="col-md-4">
+      <x-stats-card :title="'Stock In'" :stats="$stock_in">
         <x-slot name="icon">
-          <i class="align-middle" data-feather="package"></i>
+          <i class="align-middle" data-feather="log-in"></i>
         </x-slot>
       </x-stats-card>
     </div>
 
-    <div class="col-md-3">
-      <x-stats-card :title="'Total Price'" :stats="number_format($total_price, 0, ',', '.')">
+    <div class="col-md-4">
+      <x-stats-card :title="'Stock Out'" :stats="$stock_out">
         <x-slot name="icon">
-          <i class="align-middle" data-feather="dollar-sign"></i>
-        </x-slot>
-      </x-stats-card>
-    </div>
-
-    <div class="col-md-3">
-      <x-stats-card :title="'Average Price'" :stats="number_format($average_price, 0, ',', '.')">
-        <x-slot name="icon">
-          <i class="align-middle" data-feather="pie-chart"></i>
+          <i class="align-middle" data-feather="log-out"></i>
         </x-slot>
       </x-stats-card>
     </div>
@@ -50,21 +42,19 @@
     <div class="col-xl-12 col-md-12 col-sm-12">
       <div class="card">
         <div class="card-body">
-          <table id="items-table" class="table nowrap w-full">
+          <table id="transactions-table" class="table nowrap w-full">
             <thead>
               <tr>
                 <th>
                   <input type="checkbox" class="form-check-input" id="select-all">
                 </th>
-                <th>SKU</th>
-                <th>Name</th>
+                <th>Transaction ID</th>
+                <th>Item</th>
+                <th>Type</th>
                 <th>Description</th>
-                <th>Category</th>
-                <th>Barcode</th>
-                <th>Barcode Type</th>
+                <th>Supplier</th>
+                <th>Storage Location</th>
                 <th>Quantity</th>
-                <th>Min Stock</th>
-                <th>Unit Price</th>
                 <th>Created Date</th>
                 <th>Last Updated</th>
                 <th></th>
@@ -79,7 +69,7 @@
   <x-slot name="scripts">
     <script>
       $(function () {
-        const table = $('#items-table').DataTable({
+        const table = $('#transactions-table').DataTable({
           scrollX: true,
           scrollCollapse: true,
           fixedColumns: {
@@ -88,7 +78,7 @@
           },
           processing: true,
           serverSide: true,
-          ajax: '{{ route('fetch-items') }}',
+          ajax: '{{ route('fetch-transactions') }}',
           columns: [
             {
               data: null,
@@ -97,38 +87,36 @@
               orderable: false,
               searchable: false,
             },
-            { data: 'sku', name: 'sku' },
-            { data: 'name', name: 'name' },
+            { data: 'transaction_id', name: 'transaction_id' },
+            { data: 'item', name: 'item' },
+            { data: 'type', name: 'type' },
             { data: 'description', name: 'description' },
-            { data: 'category', name: 'category' },
-            { data: 'barcode', name: 'barcode' },
-            { data: 'barcode_type', name: 'barcode_type' },
+            { data: 'supplier', name: 'supplier' },
+            { data: 'storage_location', name: 'storage_location' },
             { data: 'quantity', name: 'quantity' },
-            { data: 'min_stock', name: 'min_stock' },
-            { data: 'unit_price', name: 'unit_price' },
             { data: 'created_at', name: 'created_at' },
             { data: 'updated_at', name: 'updated_at' },
             { data: 'action', name: 'action', orderable: false, searchable: false },
           ],
           rowCallback: function (row, data) {
             $(row).addClass('clickable-row');
-            $(row).attr('data-url', `{{ url('item') }}/${data.id}`);
+            $(row).attr('data-url', `{{ url('transaction') }}/${data.id}`);
           }
         });
 
         table.order([table.column('created_at:name').index(), 'desc']).draw();
 
-        $('#items-table tbody').on('click', '.clickable-row', function () {
+        $('#transactions-table tbody').on('click', '.clickable-row', function () {
           const url = $(this).data('url');
           window.location.href = url;
         });
 
-        $('#items-table tbody').on('click', '.row-checkbox', function (e) {
+        $('#transactions-table tbody').on('click', '.row-checkbox', function (e) {
           e.stopPropagation();
         });
 
         table.on('draw', function() {
-          $('#items-table tbody').on('click', '.btn-delete', function (e) {
+          $('#transactions-table tbody').on('click', '.btn-delete', function (e) {
             e.stopPropagation();
           });
         });
@@ -164,7 +152,7 @@
         const handleBulkDelete = (selectedIds) => {
           Swal.fire({
             title: 'Are you sure?',
-            text: `You are about to delete ${selectedIds.length} items.`,
+            text: `You are about to delete ${selectedIds.length} transactions.`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -173,7 +161,7 @@
           }).then((result) => {
             if (result.isConfirmed) {
               $.ajax({
-                url: '{{ route("bulk-delete-items") }}',
+                url: '{{ route("bulk-delete-transactions") }}',
                 method: 'POST',
                 data: {
                   ids: selectedIds,
@@ -201,14 +189,14 @@
         const handleBulkEdit = (selectedIds) => {
           Swal.fire({
             title: 'Bulk Edit',
-            text: `You selected ${selectedIds.length} items for editing.`,
+            text: `You selected ${selectedIds.length} transactions for editing.`,
             icon: 'info',
             timer: 2000,
             showConfirmButton: false,
           });
 
           // Redirect to a bulk edit page
-          window.location.href = `/items/bulk-edit?ids=${selectedIds.join(',')}`;
+          window.location.href = `/transactions/bulk-edit?ids=${selectedIds.join(',')}`;
         };
 
         // Event: Checkbox change
@@ -228,8 +216,8 @@
             handleBulkDelete(selectedIds);
           } else {
             Swal.fire({
-              title: 'No items selected',
-              text: 'Please select at least one item to perform this action.',
+              title: 'No transactions selected',
+              text: 'Please select at least one transaction to perform this action.',
               icon: 'info',
               timer: 2000,
               showConfirmButton: false,
@@ -245,8 +233,8 @@
             handleBulkEdit(selectedIds);
           } else {
             Swal.fire({
-              title: 'No items selected',
-              text: 'Please select at least one item to perform this action.',
+              title: 'No transactions selected',
+              text: 'Please select at least one transaction to perform this action.',
               icon: 'info',
               timer: 2000,
               showConfirmButton: false,
