@@ -142,7 +142,7 @@
                                     <a href="#" class="list-group-item">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-2">
-                                                <img src="img/avatars/avatar-5.jpg"
+                                                <img src="{{ asset('img/avatars/avatar-5.jpg') }}"
                                                     class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
                                             </div>
                                             <div class="col-10 ps-2">
@@ -156,7 +156,7 @@
                                     <a href="#" class="list-group-item">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-2">
-                                                <img src="img/avatars/avatar-2.jpg"
+                                                <img src="{{ asset('img/avatars/avatar-2.jpg') }}"
                                                     class="avatar img-fluid rounded-circle" alt="William Harris">
                                             </div>
                                             <div class="col-10 ps-2">
@@ -170,7 +170,7 @@
                                     <a href="#" class="list-group-item">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-2">
-                                                <img src="img/avatars/avatar-4.jpg"
+                                                <img src="{{ asset('img/avatars/avatar-4.jpg') }}"
                                                     class="avatar img-fluid rounded-circle" alt="Christina Mason">
                                             </div>
                                             <div class="col-10 ps-2">
@@ -184,7 +184,7 @@
                                     <a href="#" class="list-group-item">
                                         <div class="row g-0 align-items-center">
                                             <div class="col-2">
-                                                <img src="img/avatars/avatar-3.jpg"
+                                                <img src="{{ asset('img/avatars/avatar-3.jpg') }}"
                                                     class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
                                             </div>
                                             <div class="col-10 ps-2">
@@ -210,9 +210,9 @@
 
                             <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
                                 data-bs-toggle="dropdown">
-                                <img src="{{ asset('img/avatars/avatar.jpg') }}"
-                                    class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span
-                                    class="text-dark">Charles Hall</span>
+                                <img src="{{ asset('img/avatars/azfa.jpg') }}" height="50"
+                                    class="avatar img-fluid rounded me-1" alt="M Azfa Asykarulloh" /> <span
+                                    class="text-dark">M Azfa Asykarulloh</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
@@ -239,8 +239,6 @@
             <main class="content">
                 <div class="container-fluid p-0">
                     {{ $slot }}
-
-                    @include('sweetalert::alert')
                 </div>
             </main>
 
@@ -252,7 +250,7 @@
                                 <a class="text-muted" href="https://adminkit.io/"
                                     target="_blank"><strong>Inventory</strong></a> - <a class="text-muted"
                                     href="https://adminkit.io/" target="_blank"><strong>Muhammad Azfa Asykarulloh
-                                        Template</strong></a> &copy;
+                                    </strong></a> &copy;
                             </p>
                         </div>
                         <div class="col-6 text-end">
@@ -276,6 +274,7 @@
             </footer>
         </div>
     </div>
+    @include('sweetalert::alert')
 
     <script src="{{ asset('js/app.js') }}"></script>
 

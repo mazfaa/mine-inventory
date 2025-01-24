@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DetailTransactionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StorageLocationController;
 use App\Http\Controllers\SupplierController;
@@ -26,4 +27,6 @@ Route::post('/items/bulk-delete', [ItemController::class, 'bulk_delete'])->name(
 
 Route::get('/fetch-transactions', [TransactionController::class, 'fetch_transactions'])->name('fetch-transactions');
 Route::resource('transaction', TransactionController::class);
-Route::post('/transactions/bulk-delete', [TransactionController::class, 'bulk_delete'])->name('bulk-delete-transactions');
+
+Route::get('/fetch-detail-transactions/{transaction}', [DetailTransactionController::class, 'fetch_detail_transactions'])->name('fetch-detail-transactions');
+Route::resource('detail-transaction', DetailTransactionController::class);

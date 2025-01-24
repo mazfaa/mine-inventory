@@ -18,6 +18,7 @@ return new class extends Migration {
       $table->foreignId('storage_location_id')->constrained()->cascadeOnDelete();
       $table->integer('quantity');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

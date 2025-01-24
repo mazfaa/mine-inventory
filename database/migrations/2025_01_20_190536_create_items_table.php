@@ -18,6 +18,7 @@ return new class extends Migration {
       $table->text('description')->nullable();
       $table->string('barcode')->nullable();
       $table->enum('barcode_type', ['ISBN', 'UPC', 'GTIN'])->nullable();
+      $table->integer('initial_stock');
       $table->integer('quantity');
       $table->integer('min_stock');
       $table->integer('unit_price');

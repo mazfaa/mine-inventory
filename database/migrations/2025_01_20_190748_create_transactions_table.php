@@ -16,6 +16,7 @@ return new class extends Migration {
       $table->text('description')->nullable();
       $table->integer('grand_amount')->nullable();
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

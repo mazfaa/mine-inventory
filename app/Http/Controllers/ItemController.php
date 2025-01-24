@@ -24,7 +24,17 @@ class ItemController extends Controller
       'delete' => 'item.destroy'
     ];
 
-    return $this->generateDataTable($query, $routes);
+    return $this->generateDataTable($query, $routes, [
+      'category' =>
+        function ($row) {
+          return $row->category->name ?? 'No Category';
+        }
+    ], [
+      'unit_price' =>
+        function ($row) {
+          return 'Rp ' . number_format($row->unit_price, 0, ',', '.');
+        }
+    ]);
   }
 
   /**
@@ -57,11 +67,12 @@ class ItemController extends Controller
    */
   public function store(ItemRequest $request)
   {
+    $request['initial_stock'] = $request->quantity;
     $request['unit_price'] = (int) str_replace('.', '', $request->unit_price);
 
     Item::create($request->all());
 
-    Alert::success('Success', 'Storage Location created successfully.');
+    Alert::success('Success', 'Item created successfully.');
 
     return redirect()->route('item.index');
   }
@@ -97,7 +108,7 @@ class ItemController extends Controller
 
     $item->update($request->all());
 
-    Alert::success('Success', 'Storage Location updated successfully.');
+    Alert::success('Success', 'Item updated successfully.');
 
     return redirect()->route('item.index');
   }
@@ -109,7 +120,7 @@ class ItemController extends Controller
   {
     $item->delete();
 
-    Alert::success('Success', 'Storage Location deleted successfully.');
+    Alert::success('Success', 'Item deleted successfully.');
 
     return redirect()->route('item.index');
   }

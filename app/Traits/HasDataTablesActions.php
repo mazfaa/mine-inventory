@@ -6,27 +6,9 @@ use Yajra\DataTables\Facades\DataTables;
 
 trait HasDataTablesActions
 {
-  public function generateDataTable($query, $routes, $additionalColumns = [])
+  public function generateDataTable($query, $routes, $additionalColumns = [], $additionalEditColumns = [])
   {
-    return DataTables::of($query)
-      ->addColumn('transaction_id', function ($row) {
-        return $row->transaction->name ?? 'No Transaction ID';
-      })
-      ->addColumn('item', function ($row) {
-        return $row->item->name ?? 'No Item';
-      })
-      ->addColumn('supplier', function ($row) {
-        return $row->supplier->name ?? 'No Supplier';
-      })
-      ->addColumn('storage_location', function ($row) {
-        return $row->storage_location->name ?? 'No Storage_location';
-      })
-      ->addColumn('category', function ($row) {
-        return $row->category->name ?? 'No Category';
-      })
-      ->editColumn('unit_price', function ($row) {
-        return 'Rp ' . number_format($row->unit_price, 0, ',', '.');
-      })
+    $dataTable = DataTables::of($query)
       ->addColumn('action', function ($row) use ($routes) {
         $viewRoute = $routes['view'] ?? null;
         $editRoute = $routes['edit'] ?? null;
@@ -35,7 +17,7 @@ trait HasDataTablesActions
         $actionButtons = '';
 
         if ($viewRoute) {
-          $actionButtons .= '<a href="' . route($viewRoute, $row->id) . '" class="btn btn-sm btn-secondary btn-view-detail" data-id="' . $row->id . '">View</a> ';
+          $actionButtons .= '<a href="' . route($viewRoute, $row->id) . '" class="btn btn-sm btn-secondary btn-view-detail" data-id="' . $row->id . '">Detail</a> ';
         }
 
         if ($editRoute) {
@@ -59,9 +41,21 @@ trait HasDataTablesActions
       })
       ->editColumn('updated_at', function ($row) {
         return $row->updated_at->format('M j, Y');
-      })
-      ->addColumns($additionalColumns)
-      ->rawColumns(['action'])
-      ->make(true);
+      });
+
+    // Tambahkan kolom tambahan secara dinamis
+    if (!empty($additionalColumns)) {
+      foreach ($additionalColumns as $key => $callback) {
+        $dataTable->addColumn($key, $callback);
+      }
+    }
+
+    if (!empty($additionalEditColumns)) {
+      foreach ($additionalEditColumns as $key => $callback) {
+        $dataTable->editColumn($key, $callback);
+      }
+    }
+
+    return $dataTable->rawColumns(['type', 'action'])->make(true);
   }
 }

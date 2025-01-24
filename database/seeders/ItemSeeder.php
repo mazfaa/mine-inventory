@@ -20,6 +20,7 @@ class ItemSeeder extends Seeder
           'category_id' => 1, // Electronics
           'sku' => 'DL-LPT-INS14',
           'quantity' => 25,
+          'initial_stock' => 25,
           'barcode' => '9781234567897', // ISBN example
           'barcode_type' => 'ISBN',
           'description' => '14-inch laptop with an Intel Core i5 processor and 8GB RAM.',
@@ -33,6 +34,7 @@ class ItemSeeder extends Seeder
           'category_id' => 2, // Furniture
           'sku' => 'FR-DSK-WLTN',
           'quantity' => 10,
+          'initial_stock' => 10,
           'barcode' => '123456789012', // UPC example
           'barcode_type' => 'UPC',
           'description' => 'Sturdy wooden desk with a walnut finish, ideal for home and office use.',
@@ -46,6 +48,7 @@ class ItemSeeder extends Seeder
           'category_id' => 3, // Office Supplies
           'sku' => 'OS-PEN-10PK',
           'quantity' => 100,
+          'initial_stock' => 100,
           'barcode' => '00012345600012', // GTIN example
           'barcode_type' => 'GTIN',
           'description' => 'Smooth-writing ballpoint pens in a convenient pack of 10.',
@@ -59,6 +62,7 @@ class ItemSeeder extends Seeder
           'category_id' => 1, // Electronics
           'sku' => 'SM-GA-A54',
           'quantity' => 50,
+          'initial_stock' => 50,
           'barcode' => '9784561237897', // ISBN example
           'barcode_type' => 'ISBN',
           'description' => 'Samsung Galaxy A54 with 128GB storage and 5G capability.',
@@ -72,6 +76,7 @@ class ItemSeeder extends Seeder
           'category_id' => 2, // Furniture
           'sku' => 'FR-CHR-ERG',
           'quantity' => 15,
+          'initial_stock' => 15,
           'barcode' => '456789123456', // UPC example
           'barcode_type' => 'ISBN',
           'description' => 'Comfortable ergonomic office chair with adjustable height and lumbar support.',
@@ -85,6 +90,7 @@ class ItemSeeder extends Seeder
           'category_id' => 3, // Office Supplies
           'sku' => 'OS-PPR-A4',
           'quantity' => 200,
+          'initial_stock' => 200,
           'barcode' => '00876543210009', // GTIN example
           'barcode_type' => 'ISBN',
           'description' => 'High-quality A4 printer paper for professional printing needs.',

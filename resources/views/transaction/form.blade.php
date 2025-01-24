@@ -24,8 +24,10 @@
                             <x-form-label :for="'type'">Type *</x-form-label>
                             <select name="type" id="type"
                                 class="form-select @error('type') is-invalid @enderror">
-                                <option value="in">Stock In</option>
-                                <option value="out">Stock Out</option>
+                                <option value="in" {{ $transaction->type == 'in' ? 'selected' : '' }}>Stock In
+                                </option>
+                                <option value="out" {{ $transaction->type == 'out' ? 'selected' : '' }}>Stock Out
+                                </option>
                             </select>
                             @error('type')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -41,95 +43,213 @@
                 </div>
 
                 <div class="item-container">
-                    <div class="card item-card">
-                        <div class="card-body">
-                            <div class="mb-3 d-flex gap-4">
-                                <div class="w-50">
-                                    <x-form-label :for="'item'">Item *</x-form-label>
-                                    <div class="d-flex">
-                                        <select name="transactions[0][item_id]" id="item_id"
-                                            class="form-select item-select @error('transactions.0.item_id') is-invalid @enderror">
-                                            <option>Select Item</option>
-                                            @foreach ($items as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ old('transactions.0.item_id') == $item->id || $transaction->item_id == $item->id ? 'selected' : '' }}>
-                                                    {{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
+                    @if ($method == 'put')
+                        @foreach ($transaction->detail_transactions as $index => $detail_transaction)
+                            <div class="card item-card" id="item-card-{{ $index > 0 ? $index : '' }}">
+                                <input type="hidden" name="transactions[{{ $index }}][id]"
+                                    value="{{ $detail_transaction['id'] }}">
+                                @if ($index > 0)
+                                    <div class="card-header border">
+                                        <button type="button" class="btn btn-danger remove-item-btn"
+                                            data-id="{{ $index }}">Remove</button>
+                                    </div>
+                                @endif
+                                <div class="card-body">
+                                    <div class="mb-3 d-flex gap-4">
+                                        <div class="w-50">
+                                            <x-form-label :for="'item'">Item *</x-form-label>
+                                            <div class="d-flex">
+                                                <select name="transactions[{{ $index }}][item_id]"
+                                                    id="item_id"
+                                                    class="form-select item-select @error('transactions.' . $index . '.item_id') is-invalid @enderror">
+                                                    <option>Select Item</option>
+                                                    @foreach ($items as $item)
+                                                        <option value="{{ $item->id }}"
+                                                            {{ old('transactions.' . $index . '.item_id') == $item->id || $detail_transaction->item_id == $item->id ? 'selected' : '' }}>
+                                                            {{ $item->name }}</option>
+                                                    @endforeach
+                                                </select>
 
-                                        <a href="{{ route('item.create') }}" class="btn border border-secondary-subtle">
-                                            <i class="align-middle" data-feather="plus"></i>
-                                        </a>
+                                                <a href="{{ route('item.create') }}"
+                                                    class="btn border border-secondary-subtle">
+                                                    <i class="align-middle" data-feather="plus"></i>
+                                                </a>
+                                            </div>
+
+                                            @error('transactions.' . $index . '.item_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="w-50">
+                                            <x-form-label :for="'quantity-' . $index">Quantity *</x-form-label>
+                                            <input type="number" name="transactions[{{ $index }}][quantity]"
+                                                class="form-control @error('transactions.' . $index . '.quantity') is-invalid @enderror"
+                                                id="quantity-{{ $index }}"
+                                                value="{{ $method == 'post' ? old('transactions.' . $index . '.quantity') : old('transactions.' . $index . '.quantity', $detail_transaction->quantity) }}"
+                                                autocomplete="off" />
+
+                                            @error('transactions.' . $index . '.quantity')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
                                     </div>
 
-                                    @error('transactions.0.item_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                    <div class="mb-3 d-flex gap-4">
+                                        <div class="flex-grow-1">
+                                            <x-form-label :for="'supplier'">Supplier *</x-form-label>
+                                            <div class="d-flex">
+                                                <select name="transactions[{{ $index }}][supplier_id]"
+                                                    id="supplier_id"
+                                                    class="form-select @error('transactions.' . $index . '.supplier_id') is-invalid @enderror">
+                                                    @foreach ($suppliers as $supplier)
+                                                        <option value="{{ $supplier->id }}"
+                                                            {{ old('transactions.' . $index . '.supplier_id') == $supplier->id || $detail_transaction->supplier_id == $supplier->id ? 'selected' : '' }}>
+                                                            {{ $supplier->name }}</option>
+                                                    @endforeach
+                                                </select>
 
-                                <div class="w-50">
-                                    <x-form-label :for="'quantity'">Quantity *</x-form-label>
-                                    <input type="number" name="transactions[0][quantity]"
-                                        class="form-control @error('transactions.0.quantity') is-invalid @enderror"
-                                        id="quantity"
-                                        value="{{ $method == 'post' ? old('transactions.0.quantity') : old('transactions.0.quantity', $item->quantity) }}"
-                                        autocomplete="off" />
+                                                <a href="{{ route('supplier.create') }}"
+                                                    class="btn border border-secondary-subtle">
+                                                    <i class="align-middle" data-feather="plus"></i>
+                                                </a>
+                                            </div>
 
-                                    @error('transactions.0.quantity')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                            @error('transactions.' . $index . '.supplier_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="flex-grow-1">
+                                            <x-form-label :for="'storage_location'">Storage Location *</x-form-label>
+                                            <div class="d-flex">
+                                                <select name="transactions[{{ $index }}][storage_location_id]"
+                                                    id="storage_location_id"
+                                                    class="form-select @error('transactions.' . $index . '.storage_location_id') is-invalid @enderror">
+                                                    @foreach ($storage_locations as $storage_location)
+                                                        <option value="{{ $storage_location->id }}"
+                                                            {{ old('transactions.' . $index . '.storage_location_id') == $storage_location->id || $detail_transaction->storage_location_id == $storage_location->id ? 'selected' : '' }}>
+                                                            {{ $storage_location->name }}</option>
+                                                    @endforeach
+                                                </select>
+
+                                                <a href="{{ route('storage-location.create') }}"
+                                                    class="btn border border-secondary-subtle">
+                                                    <i class="align-middle" data-feather="plus"></i>
+                                                </a>
+                                            </div>
+
+                                            @error('transactions.' . $index . '.storage_location_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        @endforeach
+                    @else
+                        <div class="card item-card">
+                            <div class="card-body">
+                                <div class="mb-3 d-flex gap-4">
+                                    <div class="w-50">
+                                        <x-form-label :for="'item'">Item *</x-form-label>
+                                        <div class="d-flex">
+                                            <select name="transactions[0][item_id]" id="item_id"
+                                                class="form-select item-select @error('transactions.0.item_id') is-invalid @enderror">
+                                                <option>Select Item</option>
+                                                @foreach ($items as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ old('transactions.0.item_id') == $item->id || $transaction->item_id == $item->id ? 'selected' : '' }}>
+                                                        {{ $item->name }}</option>
+                                                @endforeach
+                                            </select>
 
-                            <div class="mb-3 d-flex gap-4">
-                                <div class="flex-grow-1">
-                                    <x-form-label :for="'supplier'">Supplier *</x-form-label>
-                                    <div class="d-flex">
-                                        <select name="transactions[0][supplier_id]" id="supplier_id"
-                                            class="form-select @error('transactions.0.supplier_id') is-invalid @enderror">
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}"
-                                                    {{ old('transactions.0.supplier_id') == $supplier->id || $transaction->supplier_id == $supplier->id ? 'selected' : '' }}>
-                                                    {{ $supplier->name }}</option>
-                                            @endforeach
-                                        </select>
+                                            <a href="{{ route('item.create') }}"
+                                                class="btn border border-secondary-subtle">
+                                                <i class="align-middle" data-feather="plus"></i>
+                                            </a>
+                                        </div>
 
-                                        <a href="{{ route('supplier.create') }}"
-                                            class="btn border border-secondary-subtle">
-                                            <i class="align-middle" data-feather="plus"></i>
-                                        </a>
+                                        @error('transactions.0.item_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
-                                    @error('transactions.0.supplier_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="w-50">
+                                        <x-form-label :for="'quantity'">Quantity *</x-form-label>
+                                        <input type="number" name="transactions[0][quantity]"
+                                            class="form-control @error('transactions.0.quantity') is-invalid @enderror"
+                                            id="quantity"
+                                            value="{{ $method == 'post' ? old('transactions.0.quantity') : old('transactions.0.quantity', $item->quantity) }}"
+                                            autocomplete="off" />
+
+                                        @error('transactions.0.quantity')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+
+                                        {{-- @if ($errors->any())
+                                            {{ dd($errors) }}
+                                        @endif --}}
+
+                                        {{-- @if ($errors->has('transactions.0.quantity'))
+                                            <div class="invalid-feedback">
+                                                {{ $errors->first('transactions.0.quantity') }}</div>
+                                        @endif --}}
+                                    </div>
                                 </div>
 
-                                <div class="flex-grow-1">
-                                    <x-form-label :for="'storage_location'">Storage Location *</x-form-label>
-                                    <div class="d-flex">
-                                        <select name="transactions[0][storage_location_id]" id="storage_location_id"
-                                            class="form-select @error('transactions.0.storage_location_id') is-invalid @enderror">
-                                            @foreach ($storage_locations as $storage_location)
-                                                <option value="{{ $storage_location->id }}"
-                                                    {{ old('transactions.0.storage_location_id') == $storage_location->id || $transaction->storage_location_id == $storage_location->id ? 'selected' : '' }}>
-                                                    {{ $storage_location->name }}</option>
-                                            @endforeach
-                                        </select>
+                                <div class="mb-3 d-flex gap-4">
+                                    <div class="flex-grow-1">
+                                        <x-form-label :for="'supplier'">Supplier *</x-form-label>
+                                        <div class="d-flex">
+                                            <select name="transactions[0][supplier_id]" id="supplier_id"
+                                                class="form-select @error('transactions.0.supplier_id') is-invalid @enderror">
+                                                @foreach ($suppliers as $supplier)
+                                                    <option value="{{ $supplier->id }}"
+                                                        {{ old('transactions.0.supplier_id') == $supplier->id || $transaction->supplier_id == $supplier->id ? 'selected' : '' }}>
+                                                        {{ $supplier->name }}</option>
+                                                @endforeach
+                                            </select>
 
-                                        <a href="{{ route('storage-location.create') }}"
-                                            class="btn border border-secondary-subtle">
-                                            <i class="align-middle" data-feather="plus"></i>
-                                        </a>
+                                            <a href="{{ route('supplier.create') }}"
+                                                class="btn border border-secondary-subtle">
+                                                <i class="align-middle" data-feather="plus"></i>
+                                            </a>
+                                        </div>
+
+                                        @error('transactions.0.supplier_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
-                                    @error('transactions.0.storage_location_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <div class="flex-grow-1">
+                                        <x-form-label :for="'storage_location'">Storage Location *</x-form-label>
+                                        <div class="d-flex">
+                                            <select name="transactions[0][storage_location_id]"
+                                                id="storage_location_id"
+                                                class="form-select @error('transactions.0.storage_location_id') is-invalid @enderror">
+                                                @foreach ($storage_locations as $storage_location)
+                                                    <option value="{{ $storage_location->id }}"
+                                                        {{ old('transactions.0.storage_location_id') == $storage_location->id || $transaction->storage_location_id == $storage_location->id ? 'selected' : '' }}>
+                                                        {{ $storage_location->name }}</option>
+                                                @endforeach
+                                            </select>
+
+                                            <a href="{{ route('storage-location.create') }}"
+                                                class="btn border border-secondary-subtle">
+                                                <i class="align-middle" data-feather="plus"></i>
+                                            </a>
+                                        </div>
+
+                                        @error('transactions.0.storage_location_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
 
                 <div class="d-flex justify-content-between">
