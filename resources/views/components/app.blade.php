@@ -40,6 +40,9 @@
     <link rel="stylesheet" href="{{ asset('swal/sweetalert2.min.css') }}">
     <script src="{{ asset('swal/sweetalert2.js') }}"></script>
 
+    <!-- Dropzone -->
+    <link rel="stylesheet" href="{{ asset('dropzone/dropzone.min.css') }}">
+    <script src="{{ asset('dropzone/dropzone.min.js') }}"></script>
 </head>
 
 <body>
@@ -281,26 +284,26 @@
     {{ $scripts ?? '' }}
 
     <script>
-        const {
-            ClassicEditor,
-            Essentials,
-            Bold,
-            Italic,
-            Font,
-            Paragraph
-        } = window.CKEDITOR;
-        ClassicEditor
-            .create(document.querySelector('.ckeditor'), {
-                licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjkxMjYzOTksImp0aSI6ImU5M2Y5ZjA2LWE2ZWUtNDE4ZS04ZGY5LTMxYzM3ZTIwZTRlOCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYzcyZDM3OTIifQ.gKMqZx3TFSUQH92gOX8eOTupb3FiZlhHDz53w2WetuC-QXKd7baDjq0wfTGhPR-dFF6co5GIA2zptV0Uq3qQgg',
-                plugins: [Essentials, Bold, Italic, Font, Paragraph],
-                toolbar: [
-                    'undo', 'redo', '|', 'bold', 'italic', '|',
-                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
-                ],
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        // const {
+        //     ClassicEditor,
+        //     Essentials,
+        //     Bold,
+        //     Italic,
+        //     Font,
+        //     Paragraph
+        // } = window.CKEDITOR;
+        // ClassicEditor
+        //     .create(document.querySelector('.ckeditor'), {
+        //         licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjkxMjYzOTksImp0aSI6ImU5M2Y5ZjA2LWE2ZWUtNDE4ZS04ZGY5LTMxYzM3ZTIwZTRlOCIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYzcyZDM3OTIifQ.gKMqZx3TFSUQH92gOX8eOTupb3FiZlhHDz53w2WetuC-QXKd7baDjq0wfTGhPR-dFF6co5GIA2zptV0Uq3qQgg',
+        //         plugins: [Essentials, Bold, Italic, Font, Paragraph],
+        //         toolbar: [
+        //             'undo', 'redo', '|', 'bold', 'italic', '|',
+        //             'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor'
+        //         ],
+        //     })
+        //     .catch(error => {
+        //         console.error(error);
+        //     });
 
         function formatPrice(value) {
             if (!value) return '';

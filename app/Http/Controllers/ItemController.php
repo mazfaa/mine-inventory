@@ -5,18 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ItemRequest;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\ItemImage;
 use App\Traits\HasDataTablesActions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class ItemController extends Controller
 {
   use HasDataTablesActions;
 
-  public function fetch_items()
+  public function fetch_items(Request $request)
   {
-    $query = Item::with('category');
+    // $query = Item::with('category');
+
+    $query = Item::with([
+      'category',
+      'item_images' => function ($q) {
+        $q->where('is_primary', true);
+      }
+    ]);
+
+    if ($request->has('low_stock') && $request->low_stock) {
+      $query->whereColumn('quantity', '<', 'min_stock');
+    }
 
     $routes = [
       'view' => 'item.show',
@@ -28,7 +41,7 @@ class ItemController extends Controller
       'category' =>
         function ($row) {
           return $row->category->name ?? 'No Category';
-        }
+        },
     ], [
       'unit_price' =>
         function ($row) {
@@ -37,16 +50,22 @@ class ItemController extends Controller
     ]);
   }
 
+  public function item_image_upload(Request $request)
+  {
+    dd($request->file);
+  }
+
   /**
    * Display a listing of the resource.
    */
   public function index()
   {
+    // dd(Item::where('quantity', '<', 'min_stock')->count());
     return view('item.index', [
       'total_item' => Item::count(),
+      'out_of_stock' => Item::where('quantity', 0)->count(),
       'total_stock' => Item::sum('quantity'),
-      'total_price' => Item::sum(DB::raw('quantity * unit_price')),
-      'average_price' => Item::avg('unit_price'),
+      'low_stock_items' => Item::whereRaw('quantity < min_stock')->count(),
     ]);
   }
 
@@ -67,14 +86,38 @@ class ItemController extends Controller
    */
   public function store(ItemRequest $request)
   {
-    $request['initial_stock'] = $request->quantity;
-    $request['unit_price'] = (int) str_replace('.', '', $request->unit_price);
+    // dd($request->file('image'));
+    try {
+      DB::beginTransaction();
 
-    Item::create($request->all());
+      $request['initial_stock'] = $request->quantity;
+      $request['unit_price'] = (int) str_replace('.', '', $request->unit_price);
 
-    Alert::success('Success', 'Item created successfully.');
+      $item = Item::create($request->all());
 
-    return redirect()->route('item.index');
+      if ($request->hasFile('image')) {
+        $image = $request->file('image');
+
+        // Generate a unique filename with a proper extension
+        $filename = uniqid() . '-' . $item->sku . '-' . str_replace(' ', '_', $item->name) . '.' . $image->extension();
+
+        // Store the file in the public storage directory
+        $path = $image->storeAs('img/items', $filename, 'public');
+      }
+
+      // Update the item's image field with the stored file path
+      $item->update(['image' => $path ?? 'img/items/default.png']);
+
+
+      DB::commit();
+
+      Alert::success('Success', 'Item created successfully.');
+
+      return redirect()->route('item.index');
+    } catch (\Exception $e) {
+      DB::rollback();
+      throw new \Exception($e->getMessage());
+    }
   }
 
   /**
@@ -104,14 +147,49 @@ class ItemController extends Controller
    */
   public function update(ItemRequest $request, Item $item)
   {
-    $request['unit_price'] = (int) str_replace('.', '', $request->unit_price);
+    try {
+      DB::beginTransaction();
 
-    $item->update($request->all());
+      // Konversi unit_price ke integer
+      $request['unit_price'] = (int) str_replace('.', '', $request->unit_price);
 
-    Alert::success('Success', 'Item updated successfully.');
+      // Cek apakah ada gambar baru yang diunggah
+      if ($request->hasFile('image')) {
+        $image = $request->file('image');
 
-    return redirect()->route('item.index');
+        // Generate nama file unik dengan ekstensi yang sesuai
+        $filename = uniqid() . '-' . $item->sku . '-' . str_replace(' ', '_', $item->name) . '.' . $image->extension();
+
+        // Simpan file ke direktori public storage
+        $path = $image->storeAs('img/items', $filename, 'public');
+
+        // Hapus gambar lama jika ada
+        if ($item->image && Storage::disk('public')->exists($item->image)) {
+          if ($item->image != 'img/items/default.png') {
+            Storage::disk('public')->delete($item->image);
+          }
+        }
+
+        // Update field `image` pada item
+        // $request['image'] = $path;
+      }
+
+      // dd($path);
+      // Update data item
+      $item->update($request->all());
+      $item->update(['image' => $path ?? $item->image]);
+
+      DB::commit();
+
+      Alert::success('Success', 'Item updated successfully.');
+
+      return redirect()->route('item.index');
+    } catch (\Exception $e) {
+      DB::rollback();
+      throw new \Exception($e->getMessage());
+    }
   }
+
 
   /**
    * Remove the specified resource from storage.
@@ -132,5 +210,4 @@ class ItemController extends Controller
 
     return response()->json(['message' => 'Selected items deleted successfully!']);
   }
-
 }

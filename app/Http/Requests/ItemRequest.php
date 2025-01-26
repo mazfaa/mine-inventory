@@ -31,6 +31,7 @@ class ItemRequest extends FormRequest
       'quantity' => ['required'],
       'min_stock' => ['required'],
       'unit_price' => ['required'],
+      'image' => ['nullable', 'image'],
     ];
   }
 }

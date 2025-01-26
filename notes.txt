@@ -1,3 +1,26 @@
+Barcode Integration
+Searchable dropdown options
+data konsumen?
+Transaction created by (which user)?
+stock opname
+forecasting demand
+storage location image?
+
+stats stok habis
+stats stok tersedia
+kolom stok akhir/sisa stok (pada laporan)
+satuan barang
+kondisi barang (barang baru, sedang diproses, barang lama)
+status barang (available, almost out, out of stock)
+kode barang
+kode transaksi
+
+Laporan
+
+Laporan stok barang.
+Laporan barang masuk/keluar.
+Laporan audit stok.
+
 3. Library dan Framework Tambahan
 Untuk fitur tertentu, gunakan tools berikut:
 

@@ -12,6 +12,7 @@ return new class extends Migration {
   {
     Schema::create('transactions', function (Blueprint $table) {
       $table->id();
+      $table->string('transaction_code')->unique();
       $table->enum('type', ['in', 'out']);
       $table->text('description')->nullable();
       $table->integer('grand_amount')->nullable();

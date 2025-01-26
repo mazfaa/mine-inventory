@@ -42,12 +42,23 @@
         <div class="col-xl-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <label for="filter-type" class="form-label align-self-center me-2">Filter by:</label>
+                        <select id="filter-type" class="form-select form-select-sm" style="width: 150px;">
+                            <option value="">All</option>
+                            <option value="in">Stock In</option>
+                            <option value="out">Stock Out</option>
+                        </select>
+                    </div>
+
+
                     <table id="transactions-table" class="table nowrap w-full">
                         <thead>
                             <tr>
                                 <th>
                                     <input type="checkbox" class="form-check-input" id="select-all">
                                 </th>
+                                <th>Code</th>
                                 <th>Type</th>
                                 <th>Description</th>
                                 <th>Created Date</th>
@@ -73,13 +84,22 @@
                     },
                     processing: true,
                     serverSide: true,
-                    ajax: '{{ route('fetch-transactions') }}',
+                    ajax: {
+                        url: '{{ route('fetch-transactions') }}',
+                        data: function(d) {
+                            d.type = $('#filter-type').val(); // Kirim filter ke server
+                        },
+                    },
                     columns: [{
                             data: null,
                             render: (data, type, row) =>
                                 `<input type="checkbox" class="row-checkbox form-check-input" data-id="${row.id}">`,
                             orderable: false,
                             searchable: false,
+                        },
+                        {
+                            data: 'code',
+                            name: 'code'
                         },
                         {
                             data: 'type',
@@ -111,6 +131,10 @@
                 });
 
                 table.order([table.column('created_at:name').index(), 'desc']).draw();
+
+                $('#filter-type').on('change', function() {
+                    table.draw(); // Refresh tabel saat dropdown diubah
+                });
 
                 $('#transactions-table tbody').on('click', '.clickable-row', function() {
                     const url = $(this).data('url');

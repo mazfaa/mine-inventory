@@ -7,7 +7,7 @@
 
     <div class="row">
         <div class="col-md-3">
-            <x-stats-card :title="'Total Item'" :stats="$total_item">
+            <x-stats-card :title="'Type'" :stats="$total_item">
                 <x-slot name="icon">
                     <i class="align-middle" data-feather="box"></i>
                 </x-slot>
@@ -15,7 +15,7 @@
         </div>
 
         <div class="col-md-3">
-            <x-stats-card :title="'Total Stock'" :stats="$total_stock">
+            <x-stats-card :title="'Stock'" :stats="$total_stock">
                 <x-slot name="icon">
                     <i class="align-middle" data-feather="package"></i>
                 </x-slot>
@@ -23,17 +23,17 @@
         </div>
 
         <div class="col-md-3">
-            <x-stats-card :title="'Total Price'" :stats="number_format($total_price, 0, ',', '.')">
+            <x-stats-card :title="'Low Stock'" :stats="$low_stock_items">
                 <x-slot name="icon">
-                    <i class="align-middle" data-feather="dollar-sign"></i>
+                    <i class="align-middle" data-feather="alert-triangle"></i>
                 </x-slot>
             </x-stats-card>
         </div>
 
         <div class="col-md-3">
-            <x-stats-card :title="'Average Price'" :stats="number_format($average_price, 0, ',', '.')">
+            <x-stats-card :title="'Out Of Stock'" :stats="$out_of_stock">
                 <x-slot name="icon">
-                    <i class="align-middle" data-feather="pie-chart"></i>
+                    <i class="align-middle" data-feather="alert-circle"></i>
                 </x-slot>
             </x-stats-card>
         </div>
@@ -50,12 +50,18 @@
         <div class="col-xl-12 col-md-12 col-sm-12">
             <div class="card">
                 <div class="card-body">
+                    <div class="mb-3">
+                        <button id="filter-low-stock" class="btn btn-warning btn-sm">Show Low Stock</button>
+                        <button id="clear-filter" class="btn btn-secondary btn-sm d-none">Show All</button>
+                    </div>
+
                     <table id="items-table" class="table nowrap w-full">
                         <thead>
                             <tr>
                                 <th>
                                     <input type="checkbox" class="form-check-input" id="select-all">
                                 </th>
+                                <th>Image</th>
                                 <th>SKU</th>
                                 <th>Name</th>
                                 <th>Description</th>
@@ -98,12 +104,31 @@
                             searchable: false,
                         },
                         {
+                            data: 'image',
+                            name: 'image',
+                            render: function(data, type, row) {
+                                return `<img src="{{ asset('storage/${data}') }}" alt="${row.name}" class="img-thumbnail" style="width: 50px;">`;
+                            },
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
                             data: 'sku',
                             name: 'sku'
                         },
                         {
                             data: 'name',
-                            name: 'name'
+                            name: 'name',
+                            render: function(data, type, row) {
+                                // Menambahkan ikon ⚠️ dan tooltip jika stok rendah
+                                if (row.quantity < row.min_stock) {
+                                    return `
+                            <span class="text-danger" title="Stock of this item is below minimum">
+                                ⚠️
+                            </span> ${data}`;
+                                }
+                                return data;
+                            },
                         },
                         {
                             data: 'description',
@@ -155,6 +180,10 @@
                     rowCallback: function(row, data) {
                         $(row).addClass('clickable-row');
                         $(row).attr('data-url', `{{ url('item') }}/${data.id}`);
+
+                        if (data.quantity < data.min_stock) {
+                            $(row).addClass('low-stock');
+                        }
                     }
                 });
 
@@ -173,6 +202,20 @@
                     $('#items-table tbody').on('click', '.btn-delete', function(e) {
                         e.stopPropagation();
                     });
+                });
+
+                // Filter stok rendah
+                $('#filter-low-stock').on('click', function() {
+                    table.ajax.url('{{ route('fetch-items') }}?low_stock=1')
+                        .load(); // Kirim parameter low_stock=1
+                    $(this).addClass('d-none');
+                    $('#clear-filter').removeClass('d-none');
+                });
+
+                $('#clear-filter').on('click', function() {
+                    table.ajax.url('{{ route('fetch-items') }}').load(); // Kembali ke data tanpa filter
+                    $(this).addClass('d-none');
+                    $('#filter-low-stock').removeClass('d-none');
                 });
 
                 const bulkActionContainer = $('#bulk-action-container');

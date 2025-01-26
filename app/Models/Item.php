@@ -15,4 +15,9 @@ class Item extends Model
   {
     return $this->belongsTo(Category::class);
   }
+
+  public function item_images()
+  {
+    return $this->hasMany(ItemImage::class);
+  }
 }

@@ -19,9 +19,13 @@ class TransactionController extends Controller
 {
   use HasDataTablesActions;
 
-  public function fetch_transactions()
+  public function fetch_transactions(Request $request)
   {
     $query = Transaction::with('detail_transactions');
+
+    if ($request->has('type') && $request->type != '') {
+      $query->where('type', $request->type);
+    }
 
     $routes = [
       'view' => 'transaction.show',

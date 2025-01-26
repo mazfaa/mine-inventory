@@ -30,6 +30,10 @@ textarea {
     resize: none;
 }
 
+textarea[name="description"] {
+    height: 150px;
+}
+
 .ck {
     height: 150px;
 }
@@ -48,4 +52,8 @@ td {
 
 #bulk-action-container {
     transition: all 0.3s ease;
+}
+
+tr.low-stock {
+    background-color: #ffe6e6 !important; /* Light pink */
 }

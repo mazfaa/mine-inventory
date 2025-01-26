@@ -12,7 +12,7 @@
             <div class="card">
                 <div class="card-body">
                     <form action="{{ $method == 'post' ? route('item.store') : route('item.update', $item->id) }}"
-                        method="post">
+                        method="post" enctype="multipart/form-data">
                         @csrf
 
                         @if ($method == 'put')
@@ -136,10 +136,26 @@
                             </div>
                         </div>
 
+                        <div class="mb-3">
+                            <x-form-label :for="'images'">Images *</x-form-label>
+                            <input type="file" name="image" class="form-control" id="image">
+                            @error('image')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
+                            @if ($method == 'put')
+                                <img src="{{ asset('storage/' . $item->image) }}" class="img-thumbnail w-25 mt-3"
+                                    alt="{{ $item->name }}">
+                            @endif
+                        </div>
+
                         <x-submit-button />
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <x-slot name="scripts">
+    </x-slot>
 </x-app>
